@@ -5,20 +5,22 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     isAuthenticated: false,
-    isLoading: true, // ⚡ true by default for reload check
+    isLoading: true, // true on startup
   },
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      state.isAuthenticated = !!action.payload;
+      state.isAuthenticated = true;
       state.isLoading = false;
     },
+
     clearUser: (state) => {
       state.user = null;
       state.isAuthenticated = false;
       state.isLoading = false;
-      localStorage.removeItem("user"); // logout ke liye
+      localStorage.removeItem("user");
     },
+
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     }
