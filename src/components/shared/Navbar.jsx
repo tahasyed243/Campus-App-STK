@@ -1,0 +1,154 @@
+import React from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { LogOut, User2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+import { auth } from "@/utils/constant";
+import { setUser } from "@/redux/authSlice";
+import { toast } from "sonner";
+
+const Navbar = () => {
+  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+      dispatch(setUser(null));
+      navigate("/");
+      toast.success("Logged out successfully ");
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
+
+  return (
+    <div className="bg-amber-100">
+      <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
+        <div className="cursor-pointer" >
+          <Link to={'/'} className="text-2xl font-bold">
+            STK <span className="text-[#F83002]">Portal</span>
+          </Link>
+        </div>
+        <div className="flex items-center gap-12">
+          <ul className="flex font-medium items-center gap-5">
+            {user ? (
+              <>
+                {user.role === "admin" && (
+                  <>
+                    <li>
+                      <Link to="/admin/dashboard">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/admin/users">Users</Link>
+                    </li>
+                    <li>
+                      <Link to="/admin/jobs">Jobs</Link>
+                    </li>
+                  </>
+                )}
+                {user.role === "company" && (
+                  <>
+                    <li>
+                      <Link to="/company/dashboard">Dashboard</Link>
+                    </li>
+                    <li>
+                      <Link to="/company/jobs">Jobs</Link>
+                    </li>
+                  </>
+                )}
+                {user.role === "student" && (
+                  <>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/jobs">Jobs</Link>
+                    </li>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/jobs">Jobs</Link>
+                </li>
+              </>
+            )}
+          </ul>
+
+          {!user ? (
+            <div className="flex items-center gap-2">
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">
+                  Signup
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Avatar className="cursor-pointer">
+                  <AvatarImage
+                    src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                    alt="@shadcn"
+                  />
+                </Avatar>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-amber-50">
+                <div className="">
+                  <div className="flex gap-2 space-y-2">
+                    <Avatar className="cursor-pointer">
+                      <AvatarImage
+                        src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                        alt="@shadcn"
+                      />
+                    </Avatar>
+                    <div>
+                      <h4 className="font-medium">{user?.fullname}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {user?.profile?.bio}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col my-2 text-gray-600">
+                    {user &&
+                      (user.role === "student" || user.role === "company") && (
+                        <div className="flex w-fit items-center gap-2 cursor-pointer">
+                          <User2 />
+                          <Button variant="link">
+                            {" "}
+                            <Link to="/profile">View Profile</Link>
+                          </Button>
+                        </div>
+                      )}
+
+                    <div className="flex w-fit items-center gap-2 cursor-pointer">
+                      <LogOut />
+                      <Button onClick={logoutHandler} variant="link">
+                        Logout
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;

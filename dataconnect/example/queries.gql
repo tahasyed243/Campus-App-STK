@@ -1,0 +1,26 @@
+mutation AddNewUser($firstName: String!, $lastName: String!, $email: String!, $role: String!) @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  user_insert(data: {firstName: $firstName, lastName: $lastName, email: $email, role: $role})
+}
+
+query GetCourses @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  courses {
+    id
+    name
+    code
+    description
+  }
+}
+
+mutation UpdateGrade($id: UUID!, $score: Int, $teacherComments: String) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  grade_update(id: $id, data: {score: $score, teacherComments: $teacherComments})
+}
+
+query GetAssignmentsForCourse($courseId: UUID!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  assignments(where: {courseId: {eq: $courseId}}) {
+    id
+    title
+    description
+    dueDate
+    maxPoints
+  }
+}

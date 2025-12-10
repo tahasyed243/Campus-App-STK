@@ -1,0 +1,94 @@
+mutation CreateSeedData @auth(level: PUBLIC, insecureReason: "This mutation is used to seed the database with sample data and does not require authentication") @transaction {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      firstName: "Demo",
+      lastName: "User1",
+      email: "demouser1@example.com",
+      role: "student",
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      firstName: "Demo",
+      lastName: "User2",
+      email: "demouser2@example.com",
+      role: "teacher",
+      createdAt: "2024-01-01T00:00:00Z"
+    }
+  ])
+  course_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440000",
+      name: "Introduction to Programming",
+      code: "CS101",
+      credits: 3,
+      description: "A foundational course in computer science.",
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: "650e8400-e29b-41d4-a716-446655440001",
+      name: "Advanced Mathematics",
+      code: "MA201",
+      credits: 4,
+      description: "A deep dive into advanced mathematical concepts.",
+      createdAt: "2024-01-01T00:00:00Z"
+    }
+  ])
+  enrollment_insertMany(data: [
+    {
+      id: "750e8400-e29b-41d4-a716-446655440000",
+      studentId: "550e8400-e29b-41d4-a716-446655440000",
+      courseId: "650e8400-e29b-41d4-a716-446655440000",
+      enrollmentDate: "2024-01-15T00:00:00Z",
+      status: "active",
+      createdAt: "2024-01-15T00:00:00Z"
+    },
+    {
+      id: "750e8400-e29b-41d4-a716-446655440001",
+      studentId: "550e8400-e29b-41d4-a716-446655440000",
+      courseId: "650e8400-e29b-41d4-a716-446655440001",
+      enrollmentDate: "2024-01-15T00:00:00Z",
+      status: "active",
+      createdAt: "2024-01-15T00:00:00Z"
+    }
+  ])
+  assignment_insertMany(data: [
+    {
+      id: "850e8400-e29b-41d4-a716-446655440000",
+      courseId: "650e8400-e29b-41d4-a716-446655440000",
+      title: "Assignment 1",
+      description: "Introduction to programming concepts.",
+      dueDate: "2024-02-01T00:00:00Z",
+      maxPoints: 100,
+      createdAt: "2024-01-20T00:00:00Z"
+    },
+    {
+      id: "850e8400-e29b-41d4-a716-446655440001",
+      courseId: "650e8400-e29b-41d4-a716-446655440001",
+      title: "Calculus Review",
+      description: "Review of calculus principles.",
+      dueDate: "2024-02-01T00:00:00Z",
+      maxPoints: 100,
+      createdAt: "2024-01-20T00:00:00Z"
+    }
+  ])
+  grade_insertMany(data: [
+    {
+      id: "950e8400-e29b-41d4-a716-446655440000",
+      assignmentId: "850e8400-e29b-41d4-a716-446655440000",
+      enrollmentId: "750e8400-e29b-41d4-a716-446655440000",
+      score: 90,
+      submissionDate: "2024-01-30T00:00:00Z",
+      createdAt: "2024-01-30T00:00:00Z"
+    },
+    {
+      id: "950e8400-e29b-41d4-a716-446655440001",
+      assignmentId: "850e8400-e29b-41d4-a716-446655440001",
+      enrollmentId: "750e8400-e29b-41d4-a716-446655440001",
+      score: 95,
+      submissionDate: "2024-01-30T00:00:00Z",
+      createdAt: "2024-01-30T00:00:00Z"
+    }
+  ])
+}
