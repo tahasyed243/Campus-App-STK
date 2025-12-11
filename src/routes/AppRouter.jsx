@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser, setLoading } from "@/redux/authSlice";
+
 import Login from "@/components/auth/Login";
 import Signup from "@/components/auth/Signup";
 import Applicants from "@/components/company/Applicants";
@@ -8,21 +12,38 @@ import Home from "@/components/Home";
 import JobDescription from "@/components/JobDescription";
 import Jobs from "@/components/Jobs";
 import Profile from "@/components/Profile";
+
 import { HashRouter, Routes, Route } from "react-router-dom";
+
 import Users from "@/components/admin/Users";
 import AdminJobs from "@/components/admin/AdminJobs";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import AdminDashboard from "../components/admin/AdminDashboard";
-import CompanyDashboard from "../components/company/CompanyDashboard";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import CompanyDashboard from "@/components/company/CompanyDashboard";
 
 function AppRouter() {
+  const dispatch = useDispatch();
+
+  // ⛔ IMPORTANT: user ko refresh par wapas redux me load karo
+  useEffect(() => {
+    const saved = localStorage.getItem("user");
+    if (saved) {
+      dispatch(setUser(JSON.parse(saved))); // user set
+    } else {
+      dispatch(setLoading(false)); // loading off
+    }
+  }, [dispatch]);
+
   return (
     <HashRouter>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        {/* Student/Home */}
         <Route
-          path="/home"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <Home />
@@ -47,6 +68,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/description/:id"
           element={
@@ -57,7 +79,6 @@ function AppRouter() {
         />
 
         {/* Company Routes */}
-
         <Route
           path="/company/dashboard"
           element={
@@ -75,6 +96,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/company/jobs/:id"
           element={
@@ -83,6 +105,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/jobs/create"
           element={
@@ -91,6 +114,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/jobs/:id/applicants"
           element={
@@ -118,6 +142,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/jobs"
           element={
@@ -126,6 +151,7 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/jobs/:jobId/applicants"
           element={

@@ -7,18 +7,22 @@ const ProtectedRoute = ({ children, role }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading) return; // Wait until redux_state loads
 
+    // Not logged in → send to login
     if (!user) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
+    // Wrong role → send to dashboard
     if (role && user.role !== role) {
-      navigate("/login"); // unauthorized ko simple home bhejo
+      navigate("/dashboard");
+      return;
     }
   }, [user, role, isLoading, navigate]);
 
+  // While loading → show nothing (prevents flickering)
   if (isLoading) return null;
 
   return <>{children}</>;

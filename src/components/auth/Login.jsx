@@ -76,7 +76,7 @@ const Login = () => {
 
       if (userData.role === "admin") navigate("/admin/dashboard");
       else if (userData.role === "company") navigate("/company/dashboard");
-      else navigate("/");
+      else navigate("/dashboard");
 
     } catch (error) {
       toast.error(error.message);
